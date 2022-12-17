@@ -31,7 +31,7 @@ const KAKAO_MAP_SCRIPT_ID = "kakao-map-script";
 const KAKAO_MAP_APP_KEY = process.env.KAKAO_MAP_KEY;
 ```
 
-props의 children에는 타입을 유연하게 정의해주는 ReactNode를 사용했습니다.
+props의 children에는 타입을 유연하게 정의해주는 ReactNode를 사용해서 타입을 잡아줬습니다.
 
 ```
 interface KakaoMapScriptLoaderProps {
@@ -69,7 +69,10 @@ useEffect(() => {
   };
 }, []);
 ```
-
-
-<h3>문제 & 해결</h3>
-
+  
+그리고 appendchild를 사용해서 root의 자식으로 script 태그를 넣어줬습니다.
+  
+```
+document.getElementById("root")?.appendChild(script);
+```
+<p>
