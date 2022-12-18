@@ -26,14 +26,14 @@
 - 지도 띄우기
 
 ```
-// useState로 로드됐는지 확인해주는 변수를 만들어줬습니다.
+// useState로 로드됐는지 확인해 주는 변수를 만들어줬습니다.
 const [mapScriptLoaded, setMapScriptLoaded] = useState(false);
 
 // 함수 컴포넌트에 useEffect를 사용했습니다.
 useEffect(() => {
     const mapScript = document.getElementById(KAKAO_MAP_SCRIPT_ID);
 
-    // 스크립트 아이디가 이미 있거나 로딩되지 않을 경우의 예외처리까지 해줬습니다.
+    // 스크립트 아이디가 이미 있거나 로딩되지 않을 경우의 예외 처리까지 해줬습니다.
     if (mapScript && !window.kakao) {
       return;
     }
@@ -60,14 +60,14 @@ useEffect(() => {
 - 지도 움직이기
 
 ```
-// 타입을 kakao.maps.Map으로 지정해줬습니다.
+// 타입을 kakao.maps.Map으로 지정해 줬습니다.
 const [map, setMap] = useState<kakao.maps.Map>();
 
 // useRef를 사용해서 특정 요소의 주소값을 담는 변수를 만들어줬습니다.
 const kakaoMapRef = useRef(null);
 
   useEffect(() => {
-    // ref의 예외처리를 해줬습니다.
+    // ref의 예외 처리를 해줬습니다.
     if (!kakaoMapRef.current) {
       return;
     }
@@ -79,7 +79,7 @@ const kakaoMapRef = useRef(null);
       level: 3,
     };
 
-    // 첫번째 인자로 Map DOM을 두번째 인자로는 옵션을 넘겨줬습니다.
+    // 첫 번째 인자로 Map DOM을 두 번째 인자로는 옵션을 넘겨줬습니다.
     setMap(new window.kakao.maps.Map(kakaoMapRef.current, options));
   }, []);
 
@@ -104,9 +104,9 @@ const kakaoMapRef = useRef(null);
 // 커스텀 훅 받아오기
 const map = useMap();
 
-  // keyword에 사용자가 입력한 값을 이벤트를 통해 받아오기 위해 빈 문장을 넣어줬습니다.
+  // keyword에 사용자가 입력한 값을 이벤트를 통해 받아오기 위해 빈 string을 넣어줬습니다.
   const [keyword, setKeyword] = useState("");
-  // 검색 리스트에 장소를 표시해주기 위해 state로 관리해줬습니다.
+  // 검색 리스트에 장소를 표시해 주기 위해 state로 관리해 줬습니다.
   const [places, setPlaces] = useState<PlaceType[]>([]);
   const placeService = useRef<kakao.maps.services.Places | null>(null);
 
@@ -123,11 +123,11 @@ const map = useMap();
   // 카카오 가이드 코드를 사용했습니다.
   const searchPlaces = (keyword: string) => {
     if (!keyword.replace(/\s+|\s+$/g, "")) {
-      alert("키워드를 입력해주세요!");
+      alert("키워드를 입력해 주세요!");
       return;
     }
 
-    // 오류가 발생해서 임시로 오류처리를 해줬습니다.
+    // 오류가 발생해서 임시로 오류 처리를 해줬습니다.
     if (!placeService.current) {
       alert("placeService 에러");
       return;
@@ -135,7 +135,7 @@ const map = useMap();
 
     placeService.current.keywordSearch(keyword, (data, status) => {
     
-      // 검색에 성공한 경우에 필요한 데이터만 표시해주고 setPlaces에 해당 info값을 저장하도록 했습니다.
+      // 검색에 성공한 경우에 필요한 데이터만 표시해 주고 setPlaces에 해당 info 값을 저장하도록 했습니다.
       if (status === kakao.maps.services.Status.OK) {
         const placeInfos = data.map((placeSearchResultitem) => {
           return {
@@ -179,8 +179,10 @@ const map = useMap();
 
 ```
 const MapMarkerController = (props: MapMarkerControllerProps) => {
+  // 커스텀 훅 가져오기
   const map = useMap();
 
+  // 검색 장소가 없다면 return
   useEffect(() => {
     if (props.places.length < 1) {
       return;
@@ -217,7 +219,7 @@ const MapMarker = (props: MapMarkerProps) => {
 
   console.log(props.showInfo);
 
-  // 마커가 여러번 생성될 필요는 없어서 useMemo 사용
+  // 마커가 여러 번 생성될 필요는 없어서 useMemo 사용
   const marker = useMemo(() => {
     const imageSize = new kakao.maps.Size(36, 37);
     const imgOptions = {
@@ -237,7 +239,7 @@ const MapMarker = (props: MapMarkerProps) => {
       image: markerImage,
     });
 
-    // 마커 클릭시 검색 장소 기준 중앙으로 이동
+    // 마커 클릭 시 검색 장소 기준 중앙으로 이동하도록 했습니다.
     kakao.maps.event.addListener(marker, "click", function () {
       map.setCenter(props.place.position);
       map.setLevel(4, {
